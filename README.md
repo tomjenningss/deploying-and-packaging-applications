@@ -134,6 +134,8 @@ Insert code into SystemReadinessCheck class:
 
 
 ````
+package io.openliberty.sample.system;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
@@ -164,7 +166,6 @@ public class SystemReadinessCheck implements HealthCheck {
     }
 
 }
-
 ````
 
 The `SystemReadinessCheck` class verifies that the `system` microservice is not in maintenance by checking a config property.
@@ -269,13 +270,15 @@ The `console.log` and `messages.log` files are the primary log files that contai
 
 In addition to the log files that are generated automatically, you can enable logging of specific Java packages or classes by using the `<logging/>` element:
 
+Add the logging feature into the `server.xml`
+
 ```
-<logging traceSpecification="<component_1>=<level>:<component_2>=<level>:..."/>
+<logging traceSpecification="com.ibm.ws.microprofile.health.*=all" />
 ```
 
 The `component` element is a Java package or class, and the `level` element is one of the following logging levels: `off`, `fatal`, `severe`, `warning`, `audit`, `info`, `config`, `detail`, `fine`, `finer`, `finest`, `all`.
 
-Try enabling detailed logging of the MicroProfile Health feature by adding the `<logging/>` element to your configuration file.
+Once enabled the `server.xml` should look like this:
 
 `src/main/liberty/config/server.xml`
 
@@ -310,55 +313,18 @@ Now, when you visit the /health endpoint, additional traces are logged in the `t
 Afterward, stop the server by typing q in the shell session where you ran the server and then press the enter/return key.
 
 
-
-## Running the application from a minimal runnable JAR
-
-So far, Open Liberty has been running out of the `target/liberty/wlp` directory, which effectively contains an Open Liberty server installation and the deployed application. The final product of the Maven build is a server package for use in a continuous integration pipeline and, ultimately, a production deployment.
-
-
-Open Liberty supports a number of different server packages. The sample application currently generates a usr package that contains the servers and application to be extracted onto an Open Liberty installation.
-
-
-The type of server package is configured with `<packaging.type/>` in the `pom.xml`.
-
-Instead of creating a server package, you can generate a runnable JAR file that contains the application along with a server runtime. This JAR can then be run anywhere and deploy your application and server at the same time. To generate a runnable JAR, invoke the `runnable-package` profile by using the `-P` flag:
-
-`mvn install -P runnable-package`
-
-The `-P` flag specifies the Maven profile to be run during the build. In this case, the `runnable-package` profile is invoked, which temporarily overrides the `packaging.type` property from the usr package to the runnable package. This property then propagates to the liberty-maven-plugin plug-in, which generates the server package that you want.
-
-
-When the build completes, you can find the runnable `getting-started.jar` file in the `target` directory. By default, this JAR file comes with all the features available in Open Liberty, including the entirety of Java EE and MicroProfile. As a result, this JAR is over 100 MB. To omit the features that you don’t need and package the JAR with only the `features` that you defined in the `server.xml` file, use `minifiy,runnable` as the packaging type. To build a minimal runnable JAR, invoke the `minify-runnable-package` profile by using the `-P` flag:
-
-`mvn install -P minify-runnable-package`
-
-The `minify-runnable-package` profile overrides the `packaging.type` property from the `usr` package to the `minify,runnable` package and generates a runnable JAR file that contains only the `features` that you explicitly enabled in your `server.xml` file. As a result, the generated JAR is only about 50 MB.
-
-To run the JAR, first stop the server if it’s running. Then, navigate to the `target` directory and run the `java -jar` command:
-
-`cd target`
-
-`java -jar getting-started.jar`
-
-When the server starts, visit the http://localhost:9080/system/properties URL to access your application that is now running out of the minimal runnable JAR.
-
-At this point, you can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
-
 ## Running the application in a Docker container
 
 To run the application in a container, you need to have Docker installed. For installation instructions, see the Official Docker Docs.
 
 To containerize the application, you need a `Dockerfile`. This file contains a collection of instructions that define how a Docker image is built, what files are packaged into it, what commands run when the image runs as a container, and so on. You can find a complete `Dockerfile` in the `start` directory. This `Dockerfile` packages the `usr` server package into a Docker image that contains a preconfigured Open Liberty server.
 
-Change directories to build the docker containers:
+Run the `mvn package` command from the `start` directory so that the .war file resides in the target directory.
 
-`cd ..`
-
-To build and containerize the application, start your Docker daemon and run the following command:
-
+`mvn package`
 `docker build -t openliberty-getting-started:1.0-SNAPSHOT .`
 
-The `-t` flag in the `docker build` command allows the Docker image to be labeled (tagged) in the `name[:tag]` format. The tag for an image describes the specific image version. If the optional `[:tag]` tag is not specified, the `latest` tag is created by default. The Docker openliberty-getting-started:1.0-SNAPSHOT image is built from the `Dockerfile`. To verify that the image is built, run the `docker images` command to list all local Docker images:
+The Docker `openliberty-getting-started:1.0-SNAPSHOT` image is also built from the Dockerfile. To verify that the image is built, run the docker images command to list all local Docker images:
 
 `docker images`
 
@@ -372,7 +338,8 @@ openliberty-getting-started    1.0-SNAPSHOT    85085141269b    21 hours ago    4
 
 Next, run the image as a container:
 
-`docker run -d --name gettingstarted-app -p 9080:9080 openliberty-getting-started:1.0-SNAPSHOT`{{execute}}
+`docker run -d --name gettingstarted-app -p 9080:9080 openliberty-getting-started:1.0-SNAPSHOT`
+
 
 There is a bit going on here, so let’s break down the command:
 
@@ -388,16 +355,18 @@ Maps the container ports to the host ports.
 
 
 The final argument in the docker run command is the Docker image name.
+
 Next, run the docker ps command to verify that your container started:
 
 `docker ps`
 
-````
 Make sure that your container is running and does not have Exited as its status:
+
+````
 CONTAINER ID    IMAGE                         CREATED          STATUS           NAMES
 4294a6bdf41b    openliberty-getting-started   9 seconds ago    Up 11 seconds    gettingstarted-app
 ````
-To access the application, visit the `http://localhost:9080/system/properties` URL.
+To access the application, `curl http://localhost:9080/system/properties` URL.
 
 To stop and remove the container, run the following commands:
 
@@ -410,30 +379,31 @@ To remove the image, run the following command:
 
 ## Running the application from a minimal runnable JAR
 
-So far, Open Liberty was running out of the target/liberty/wlp directory, which effectively contains an Open Liberty server installation and the 
-deployed application. The final product of the Maven build is a server package for use in a continuous integration pipeline and, ultimately, a 
-production deployment.
-Open Liberty supports a number of different server packages. The sample application currently generates a `usr` package that contains the servers and 
-application to be extracted onto an Open Liberty installation.
-Instead of creating a server package, you can generate a runnable JAR file that contains the application along with a server runtime. This JAR file 
-can then be run anywhere and deploy your application and server at the same time. To generate a runnable JAR file, override the `include` property:
+So far, Open Liberty has been running out of the `target/liberty/wlp` directory, which effectively contains an Open Liberty server installation and the deployed application. The final product of the Maven build is a server package for use in a continuous integration pipeline and, ultimately, a production deployment.
+
+
+Open Liberty supports a number of different server packages. The sample application currently generates a usr package that contains the servers and application to be extracted onto an Open Liberty installation.
+
+
+The type of server package is configured with `<packaging.type/>` in the `pom.xml`.
+
+Instead of creating a server package, you can generate a runnable JAR file that contains the application along with a server runtime. This JAR file can then be run anywhere and deploy your application and server at the same time. To generate a runnable JAR file, override the include property:
 
 `mvn liberty:package -Dinclude=runnable`
 
 
-The packaging type is overridden from the `usr` package to the `runnable` package. This property then propagates to the `liberty-maven-plugin` plug-in, 
-which generates the server package based on the `openliberty-kernel` package.
+To run the JAR, first stop the server if it’s running. Then, navigate to the `target` directory and run the `java -jar` command:
 
-When the build completes, you can find the minimal runnable `guide-getting-started.jar` file in the target directory. This JAR file contains only the features 
-that you explicitly enabled in your `server.xml` file. As a result, the generated JAR file is only about 50 MB.
-
-To run the JAR file, first stop the server if it’s running. Then, navigate to the target directory and run the java -jar command:
+`cd target`
 
 `java -jar guide-getting-started.jar`
 
-When the server starts, go to the http://localhost:9080/system/properties URL to access your application that is now running out of the minimal runnable JAR file.
+When the server starts:
 
-You can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
+`curl http://localhost:9080/system/properties` URL to access your application that is now running out of the minimal runnable JAR.
+
+At this point, you can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
+
 
 ## Well done
 
