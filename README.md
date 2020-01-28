@@ -80,7 +80,7 @@ Save the file `cmd + s` or `ctrl + s` on the server.xml, the OL terminal will up
 When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to the application. You can see the server being updated in the server log that’s displayed in your first shell session:
 
 ````
-<pre>
+
 [INFO] [AUDIT] CWWKG0016I: Starting server configuration update.
 [INFO] [AUDIT] CWWKT0017I: Web application removed (default_host): http://foo:9080/
 [INFO] [AUDIT] CWWKZ0009I: The application io.openliberty.guides.getting-started has stopped successfully.
@@ -89,13 +89,17 @@ When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to 
 [INFO] [AUDIT] CWWKF0012I: The server installed the following features: [mpHealth-1.0].
 [INFO] [AUDIT] CWWKF0008I: Feature update completed in 0.285 seconds.
 [INFO] [AUDIT] CWWKT0016I: Web application available (default_host): http://foo:9080/
+````
+Try to access the /health endpoint again by visiting:
+`curl http://localhost:9080/health` URL. 
 
-<pre>
+You see the following JSON output:
+````
 {
     "checks":[],
     "outcome":"UP"
 }
-</pre>
+
 ````
 You now have a means of verifying if your server is up and running.
 
@@ -215,18 +219,15 @@ After you make the file changes, Open Liberty automatically reloads its configur
 The following messages display in your first shell session:
 
 ````
-<pre>
 [INFO] [AUDIT] CWWKT0017I: Web application removed (default_host): http://foo:9080/
 [INFO] [AUDIT] CWWKZ0009I: The application io.openliberty.guides.getting-started has stopped successfully.
 [INFO] [AUDIT] CWWKT0016I: Web application available (default_host): http://foo:9080/
 [INFO] [AUDIT] CWWKZ0003I: The application io.openliberty.guides.getting-started updated in xx.xx seconds.
-</pre>
 ````
 
 Access the /health endpoint again by `curl http://localhost:9080/health` URL. This time you see the overall status of your server as well as the aggregated data of the liveness and readiness checks for the system microservice: 
 
 ````
-
 {
    "checks":[
       {
@@ -247,9 +248,11 @@ Access the /health endpoint again by `curl http://localhost:9080/health` URL. Th
    ],
    "status":"UP"
 }
-
 ````
-You can also access the `/health/ready` endpoint by visiting the `http://localhost:9080/health/ready` URL to view the data from the readiness health check. Similarily, access the /health/live endpoint by visiting the `http://localhost:9080/health/live` URL to view the data from the liveness health check.
+You can also access the `/health/ready` endpoint by visiting the `http://localhost:9080/health/ready` URL to view the data from the readiness health check. 
+
+Similarily, access the /health/live endpoint by visiting or running
+`curl http://localhost:9080/health/live` URL to view the data from the liveness health check.
 
 ## Checking the Open Liberty server logs
 
@@ -431,3 +434,7 @@ To run the JAR file, first stop the server if it’s running. Then, navigate to 
 When the server starts, go to the http://localhost:9080/system/properties URL to access your application that is now running out of the minimal runnable JAR file.
 
 You can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
+
+## Well done
+
+Well done you have learned the basics of deploying and updating an application on an Open Liberty server.
