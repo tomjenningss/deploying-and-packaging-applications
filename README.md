@@ -1,9 +1,17 @@
 ## Building and running the application
 
-Your application is configured to be built with Maven. Every Maven-configured project contains a pom.xml file, which defines the project configuration, dependencies, plug-ins, and so on.
+### What you will learn
 
-Git clone the project you will be working in:
-`git clone https://github.com/openliberty/guide-getting-started.git`
+You will learn how to run and update a simple REST microservice on an Open Liberty server. You will use Maven throughout the guide to build and deploy the microservice as well as to interact with the running server instance.
+
+Open Liberty is an application server designed for the cloud. It’s small, lightweight, and designed with modern cloud-native application development in mind. It supports the full MicroProfile and Java EE APIs and is composable, meaning that you can use only the features that you need, keeping the server lightweight, which is great for microservices. It also deploys to every major cloud platform, including Docker, Kubernetes, and Cloud Foundry.
+
+Maven is an automation build tool that provides an efficient way to develop Java applications. Using Maven, you will build a simple microservice, called system, that collects basic system properties from your laptop and displays them on an endpoint that you can access in your web browser.
+
+You’ll also explore how to package your application with the server runtime so that it can be deployed anywhere in one go. You will then make server configuration and code changes and see how they are picked up by a running server.
+Finally, you will package the application along with the server configuration into a Docker image and run that image as a container.
+
+## Building and running the application
 
 Navigate to the start directory where your pom.xml file is located. Your pom.xml file is configured to include the liberty-maven-plugin, which allows you to install applications into Open Liberty as well as manage the server instances.
 
@@ -37,26 +45,29 @@ To access the `system` microservice, access the service endpoint to cause some a
 ````
 Simply press `CTRL+C` in the shell session where you ran the server to stop the server. 
 
-
 ## Updating the server configuration without restarting the server
 
-We need to export the Java Home JRE
-
-`export JAVA_HOME=$(/usr/lib/jvm/java-8-openjdk-amd64)`
-
-`export PATH=$JAVA_HOME/jre/bin:$PATH`
-
 The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. 
-The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
-Stop the Open Liberty server if it is running, and start it in development mode by running the `liberty:dev` goal in the `start` directory:
 
-If you try to access this endpoint now at the ` curl http://localhost:9080/health` URL, you see a 404 error because the /health endpoint does not yet exist:
+The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
+
+#### Start Open Liberty Server in dev mode
+
+To start the server in dev mode run:
+
+`mvn liberty:dev` in the `start` directory
+
+Open up new a new terminal window and attempt to access the health endpoint now:
+
+`curl http://localhost:9080/health`
+
+you will see a 404 error because the /health endpoint does not yet exist:
 
 `Error 404: java.io.FileNotFoundException: SRVE0190E: File not found: /health`
 
 Open up the `server.xml` file and add the MicroProfile Health feature to the server, include the mpHealth feature in the server.xml.
  
-Open `server.xml` file 
+Open `server.xml` file. The file path is:
 
 `guide-getting-started/start/src/main/liberty/config/server.xml`
 
@@ -64,7 +75,7 @@ Add the mpHealth feature tag between the `<feature manager>` tags:
 
 `<feature>mpHealth-2.0</feature>`
 
-Save the file `cmd + s` or `ctrl + s` on the server.xml and the OL terminal will update with the new changes.
+Save the file `cmd + s` or `ctrl + s` on the server.xml, the OL terminal will update with the new changes.
 
 When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to the application. You can see the server being updated in the server log that’s displayed in your first shell session:
 
@@ -90,16 +101,13 @@ You now have a means of verifying if your server is up and running.
 
 ## Updating the source code without restarting the server
 
-The JAX-RS application that contains your `system` microservice is configured as a loose application, meaning that it runs in a server from its `.class` file and other artifacts. Open Liberty automatically monitors these artifacts, and whenever they are updated, it updates the running server without the need for the server to be restarted.
+The JAX-RS application that contains your `system` microservice is configured as a loose application, meaning that it runs in a server from its `.class` file and other artifacts. Open Liberty automatically monitors these artifacts, and whenever they're updated, it updates the running server without the need for the server to be restarted.
 
 Navigate to the `pom.xml` file under start directory
 
-
 The loose application support is enabled with the `<looseApplication/>` element in the `liberty-maven-plugin` plug-in.
 
-
 Try updating the source code while the server is running. At the moment, the `/health` endpoint reports whether or not the server is running, but the endpoint doesn’t provide any details on the microservices that are running inside of the server.
-
 
 MicroProfile Health offers health checks for both readiness and liveness. A readiness check allows third-party services, such as Kubernetes, to know if the microservice is ready to process requests. A liveness check allows third-party services to determine if the microservice is running.
 
@@ -118,7 +126,7 @@ Open SystemReadinessCheck.java
 
 `guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemReadinessCheck.java`
 
-Insert code into SystemReadinessCheck class
+Insert code into SystemReadinessCheck class:
 
 
 ````
@@ -159,13 +167,15 @@ The `SystemReadinessCheck` class verifies that the `system` microservice is not 
 
 Go to the directory that the `SystemReadinessCheck.java` will be saved
 
-Now we create the SystemLivenessCheck class
+Ensure you save the java file (cmd + s)
+
+### Create the SystemLivenessCheck class.
 
 Create a new file called `SystemLivenessCheck.java`
 
 `touch SystemLivenessCheck.java`
 
-Open `SystemLivenessCheck.java` and  Insert the following code 
+Open `SystemLivenessCheck.java` and  insert the following code: 
 
 ````
 package io.openliberty.sample.system;
@@ -213,10 +223,10 @@ The following messages display in your first shell session:
 </pre>
 ````
 
-Access the /health endpoint again by visiting the `http://localhost:9080/health` URL. This time you see the overall status of your server as well as the aggregated data of the liveness and readiness checks for the system microservice: 
+Access the /health endpoint again by `curl http://localhost:9080/health` URL. This time you see the overall status of your server as well as the aggregated data of the liveness and readiness checks for the system microservice: 
 
 ````
-<pre>
+
 {
    "checks":[
       {
@@ -237,7 +247,7 @@ Access the /health endpoint again by visiting the `http://localhost:9080/health`
    ],
    "status":"UP"
 }
-</pre>
+
 ````
 You can also access the `/health/ready` endpoint by visiting the `http://localhost:9080/health/ready` URL to view the data from the readiness health check. Similarily, access the /health/live endpoint by visiting the `http://localhost:9080/health/live` URL to view the data from the liveness health check.
 
@@ -245,12 +255,13 @@ You can also access the `/health/ready` endpoint by visiting the `http://localho
 
 Go back to the second shell session
 
-While the server is running in the foreground, it displays various console messages in the shell. 
+While the server is running in the foreground, it displays various console messages in the shell. These messages are also logged to:
+`target/liberty/wlp/usr/servers/defaultServer/logs/console.log` file. 
 
-These messages are also logged to the `target/liberty/wlp/usr/servers/GettingStartedServer/logs/console.log` file. 
 You can find the complete server logs in the 
+`target/liberty/wlp/usr/servers/defaultServer/logs` directory. 
 
-`target/liberty/wlp/usr/servers/GettingStartedServer/logs` directory. The `console.log` and `messages.log` files are the primary log files that contain console output of the running application and the server. More logs are created when run time errors occur or whenever tracing is enabled. You can find the error logs in the `ffdc` directory and the tracing logs in the trace.log file.
+The `console.log` and `messages.log` files are the primary log files that contain console output of the running application and the server. More logs are created when runtime errors occur or whenever tracing is enabled. You can find the error logs in the `ffdc` directory and the tracing logs in the `trace.log` file.
 
 
 In addition to the log files that are generated automatically, you can enable logging of specific Java packages or classes by using the `<logging/>` element:
@@ -289,19 +300,13 @@ Try enabling detailed logging of the MicroProfile Health feature by adding the `
 </server>
 ```
 
-Next, repackage the server:
+After you change the file, Open Liberty automatically reloads its configuration.
 
-`mvn package`
+Now, when you visit the /health endpoint, additional traces are logged in the `trace.log` file.
 
-Now, when you visit the `/health` endpoint, additional traces are logged into the `trace.log` file.
+Afterward, stop the server by typing q in the shell session where you ran the server and then press the enter/return key.
 
-## Starting and stopping the Open Liberty server in the background 
 
-Although you can start and stop the server in the foreground by using the Maven `liberty:run-server` goal, you can also start and stop the server in the background with the Maven `liberty:start-server` and `liberty:stop-server` goals:
-
-`mvn liberty:start-server`
-
-`mvn liberty:stop-server`
 
 ## Running the application from a minimal runnable JAR
 
