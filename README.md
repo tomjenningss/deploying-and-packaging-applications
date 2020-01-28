@@ -3,7 +3,6 @@
 Your application is configured to be built with Maven. Every Maven-configured project contains a pom.xml file, which defines the project configuration, dependencies, plug-ins, and so on.
 
 Git clone the project you will be working in:
-
 `git clone https://github.com/openliberty/guide-getting-started.git`
 
 Navigate to the start directory where your pom.xml file is located. Your pom.xml file is configured to include the liberty-maven-plugin, which allows you to install applications into Open Liberty as well as manage the server instances.
@@ -36,9 +35,8 @@ To access the `system` microservice, access the service endpoint to cause some a
     ...
 }
 ````
-Later, when you need to stop the server, simply press `CTRL+C` in the shell session where you ran the server. 
+Simply press `CTRL+C` in the shell session where you ran the server to stop the server. 
 
-Open up a new terminal window.
 
 ## Updating the server configuration without restarting the server
 
@@ -48,9 +46,9 @@ We need to export the Java Home JRE
 
 `export PATH=$JAVA_HOME/jre/bin:$PATH`
 
-When you update the server configuration files, you can run the `mvn package` command to invoke the Maven `package` phase that executes various Maven goals that repackage the server.
-
-Try updating the server configuration while the server is running. If you stopped the server, start it again before you proceed. The `system` microservice does not currently include health monitoring to report whether the server and the microservice that it runs are healthy. You can add health reports with the MicroProfile Health feature, which adds a `/health` endpoint to your application. 
+The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. 
+The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
+Stop the Open Liberty server if it is running, and start it in development mode by running the `liberty:dev` goal in the `start` directory:
 
 If you try to access this endpoint now at the ` curl http://localhost:9080/health` URL, you see a 404 error because the /health endpoint does not yet exist:
 
@@ -66,13 +64,7 @@ Add the mpHealth feature tag between the `<feature manager>` tags:
 
 `<feature>mpHealth-2.0</feature>`
 
-Navigate to the start directory, 
-
-`cd guide-getting-started/start`
-
-and repackage the server:
-
-`mvn package`
+Save the file `cmd + s` or `ctrl + s` on the server.xml and the OL terminal will update with the new changes.
 
 When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to the application. You can see the server being updated in the server log that’s displayed in your first shell session:
 
