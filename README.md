@@ -250,7 +250,7 @@ Access the /health endpoint again by `curl http://localhost:9080/health` URL. Th
    "status":"UP"
 }
 ````
-You can also access the `/health/ready` endpoint by visiting the `http://localhost:9080/health/ready` URL to view the data from the readiness health check. 
+You can also access the `/health/ready` endpoint by visiting the `curl http://localhost:9080/health/ready` URL to view the data from the readiness health check. 
 
 Similarily, access the /health/live endpoint by visiting or running
 `curl http://localhost:9080/health/live` URL to view the data from the liveness health check.
