@@ -8,10 +8,10 @@ the pre requisites.
 Experience updating the the OL server whilst it is still running as well as Dockerizing the application and running it in a 
 container.
 
-## Link to experience the skill network lab
+## Link to experience the Skills Network lab:
 
 https://theiadocker.labs.staging.cognitiveclass.ai/hub/login?next=%2Fhub%2Fspawn%3Fgitrepo%3Dgithub.com%2Ftomjenningss%2Fdeploying-and-packaging-applications
 
-#### Stop the server
+#### Link to stop the server:
 
 https://theiadocker.labs.staging.cognitiveclass.ai/hub/home 
