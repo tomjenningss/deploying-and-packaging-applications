@@ -2,6 +2,9 @@
 
 Your application is configured to be built with Maven. Every Maven-configured project contains a pom.xml file, which defines the project configuration, dependencies, plug-ins, and so on.
 
+Git clone the project you will be working in:
+
+`git clone https://github.com/openliberty/guide-getting-started.git`
 
 Navigate to the start directory where your pom.xml file is located. Your pom.xml file is configured to include the liberty-maven-plugin, which allows you to install applications into Open Liberty as well as manage the server instances.
 
@@ -9,7 +12,7 @@ Navigate to the start directory where your pom.xml file is located. Your pom.xml
 
 Install and run the server
 
-`mvn install liberty:run-server`
+`mvn install liberty:run`
 
 The mvn command initiates a Maven build, during which the target directory is created to store all build-related files.
 
@@ -49,7 +52,7 @@ When you update the server configuration files, you can run the `mvn package` co
 
 Try updating the server configuration while the server is running. If you stopped the server, start it again before you proceed. The `system` microservice does not currently include health monitoring to report whether the server and the microservice that it runs are healthy. You can add health reports with the MicroProfile Health feature, which adds a `/health` endpoint to your application. 
 
-If you try to access this endpoint now at the `http://localhost:9080/health` URL, you see a 404 error because the /health endpoint does not yet exist:
+If you try to access this endpoint now at the ` curl http://localhost:9080/health` URL, you see a 404 error because the /health endpoint does not yet exist:
 
 `Error 404: java.io.FileNotFoundException: SRVE0190E: File not found: /health`
 
@@ -125,10 +128,7 @@ Open SystemReadinessCheck.java
 
 Insert code into SystemReadinessCheck class
 
-````
-<pre class="file" data-target="clipboard">
-package io.openliberty.sample.system;
-````
+
 ````
 import javax.enterprise.context.ApplicationScoped;
 
@@ -160,7 +160,6 @@ public class SystemReadinessCheck implements HealthCheck {
     }
 
 }
-</pre>
 
 ````
 
@@ -174,12 +173,43 @@ Create a new file called `SystemLivenessCheck.java`
 
 `touch SystemLivenessCheck.java`
 
-Open SystemLivenessCheck
+Open `SystemLivenessCheck.java` and  Insert the following code 
 
-Next, recompile the application:
+````
+package io.openliberty.sample.system;
 
-`mvn compile`
+import javax.enterprise.context.ApplicationScoped;
 
+import java.lang.management.MemoryMXBean;
+import java.lang.management.ManagementFactory;
+
+import org.eclipse.microprofile.health.Liveness;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+
+@Liveness
+@ApplicationScoped
+public class SystemLivenessCheck implements HealthCheck {
+
+    @Override
+    public HealthCheckResponse call() {
+        MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+        long memUsed = memBean.getHeapMemoryUsage().getUsed();
+        long memMax = memBean.getHeapMemoryUsage().getMax();
+
+        return HealthCheckResponse.named(
+            SystemResource.class.getSimpleName() + " liveness check")
+                                  .withData("memory used", memUsed)
+                                  .withData("memory max", memMax)
+                                  .state(memUsed < memMax * 0.9).build();
+    }
+
+}
+````
+
+The `SystemLivenessCheck` class reports a status of DOWN if the microservice uses over 90% of the maximum amount of memory.
+
+After you make the file changes, Open Liberty automatically reloads its configuration and the system application.
 The following messages display in your first shell session:
 
 ````
@@ -221,7 +251,7 @@ You can also access the `/health/ready` endpoint by visiting the `http://localho
 
 ## Checking the Open Liberty server logs
 
-`Go back to the second shell session`
+Go back to the second shell session
 
 While the server is running in the foreground, it displays various console messages in the shell. 
 
@@ -334,12 +364,11 @@ The `-t` flag in the `docker build` command allows the Docker image to be labele
 
 Your image should appear in the list of all Docker images:
 
-<pre>
-
+````
 REPOSITORY                     TAG             IMAGE ID        CREATED         SIZE
 openliberty-getting-started    1.0-SNAPSHOT    85085141269b    21 hours ago    487MB
+````
 
-</pre>
 
 Next, run the image as a container:
 
@@ -347,7 +376,7 @@ Next, run the image as a container:
 
 There is a bit going on here, so let’s break down the command:
 
-<pre>
+````
 Flag	Description
 -d
 Runs the container in the background.
@@ -355,7 +384,7 @@ Runs the container in the background.
 Specifies a name for the container.
 -p
 Maps the container ports to the host ports.
-</pre>
+````
 
 
 The final argument in the docker run command is the Docker image name.
@@ -364,13 +393,11 @@ Next, run the docker ps command to verify that your container started:
 `docker ps`
 
 ````
-<pre>
 Make sure that your container is running and does not have Exited as its status:
 CONTAINER ID    IMAGE                         CREATED          STATUS           NAMES
 4294a6bdf41b    openliberty-getting-started   9 seconds ago    Up 11 seconds    gettingstarted-app
-</pre>
 ````
-To access the application, visit the http://localhost:9080/system/properties URL.
+To access the application, visit the `http://localhost:9080/system/properties` URL.
 
 To stop and remove the container, run the following commands:
 
@@ -381,4 +408,29 @@ To remove the image, run the following command:
 `docker rmi openliberty-getting-started:1.0-SNAPSHOT`
 
 
+## Running the application from a minimal runnable JAR
 
+So far, Open Liberty was running out of the target/liberty/wlp directory, which effectively contains an Open Liberty server installation and the 
+deployed application. The final product of the Maven build is a server package for use in a continuous integration pipeline and, ultimately, a 
+production deployment.
+Open Liberty supports a number of different server packages. The sample application currently generates a `usr` package that contains the servers and 
+application to be extracted onto an Open Liberty installation.
+Instead of creating a server package, you can generate a runnable JAR file that contains the application along with a server runtime. This JAR file 
+can then be run anywhere and deploy your application and server at the same time. To generate a runnable JAR file, override the `include` property:
+
+`mvn liberty:package -Dinclude=runnable`
+
+
+The packaging type is overridden from the `usr` package to the `runnable` package. This property then propagates to the `liberty-maven-plugin` plug-in, 
+which generates the server package based on the `openliberty-kernel` package.
+
+When the build completes, you can find the minimal runnable `guide-getting-started.jar` file in the target directory. This JAR file contains only the features 
+that you explicitly enabled in your `server.xml` file. As a result, the generated JAR file is only about 50 MB.
+
+To run the JAR file, first stop the server if it’s running. Then, navigate to the target directory and run the java -jar command:
+
+`java -jar guide-getting-started.jar`
+
+When the server starts, go to the http://localhost:9080/system/properties URL to access your application that is now running out of the minimal runnable JAR file.
+
+You can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
