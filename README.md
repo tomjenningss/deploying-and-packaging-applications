@@ -19,7 +19,7 @@ Navigate to the start directory where your pom.xml file is located. Your pom.xml
 
 Install and run the server
 
-`mvn install liberty:run`
+`mvn liberty:run`
 
 The mvn command initiates a Maven build, during which the target directory is created to store all build-related files.
 
