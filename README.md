@@ -63,6 +63,10 @@ The Open Liberty server automatically reloads the configuration without restarti
 
 #### Start Open Liberty Server in dev mode
 
+Navigate back to the terminal window where you started the Open Liberty Server and stop it.
+
+`ctrl + c`
+
 To start the server in dev mode run:
 
 `mvn liberty:dev` in the `start` directory
