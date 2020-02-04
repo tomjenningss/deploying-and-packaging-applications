@@ -40,14 +40,16 @@ For more information on the Liberty Maven plug-in, see its GitHub repository.
 When the server begins starting up, various messages display in your active shell. Wait for the following message, which indicates that the server startup is complete:
 
 `The server GettingStartedServer is ready to run a smarter planet.`
+                                                                                                                  _ _
+Open up a new terminal window by pressing the split window icon in the top right hand corner of terminal window  |_|_|
 
 To access the `system` microservice, access the service endpoint to cause some application measurements to be recorded:
 
 `curl http://localhost:9080/system/properties`
 ````
 {
-    "os.name": "Mac OS X",
-    "java.version": "1.8.0_151",
+    "os.name":"Linux"
+    java.version":"11.0.6",
     ...
 }
 ````
