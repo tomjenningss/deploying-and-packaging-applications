@@ -13,6 +13,14 @@ Finally, you will package the application along with the server configuration in
 
 ## Building and running the application
 
+Check you are in the `home/project` folder:
+
+`pwd`
+
+Clone the Project you are going to be working in:
+
+`git clone https://github.com/openliberty/guide-getting-started.git`
+
 Navigate to the start directory where your pom.xml file is located. Your pom.xml file is configured to include the liberty-maven-plugin, which allows you to install applications into Open Liberty as well as manage the server instances.
 
 `cd guide-getting-started/start`
