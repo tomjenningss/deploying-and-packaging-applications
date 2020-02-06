@@ -13,9 +13,15 @@ Finally, you will package the application along with the server configuration in
 
 ## Building and running the application
 
+Ensure you are running the Quick Lab in Google Chrome for the full experience.
+
 Check you are in the `home/project` folder:
 
 `pwd`
+
+If a terminal window does not open navigate:
+
+`Terminal -> New Terminal`
 
 Clone the Project you are going to be working in:
 
@@ -79,9 +85,9 @@ you will see a 404 error because the /health endpoint does not yet exist:
 
 `Error 404: java.io.FileNotFoundException: SRVE0190E: File not found: /health`
 
-Open up the `server.xml` file and add the MicroProfile Health feature to the server, include the mpHealth feature in the server.xml.
+Open up the `server.xml` file and add the MicroProfile Health feature to the server, include the mpHealth feature in the `server.xml`.
  
-Open `server.xml` file. The file path is:
+Open and browse the `server.xml` file in the Development Environment at:
 
 `guide-getting-started/start/src/main/liberty/config/server.xml`
 
@@ -134,7 +140,7 @@ MicroProfile Health offers health checks for both readiness and liveness. A read
 
 Head to the directory where the SystemReadinessCheck class will be created
 
-`cd src/main/java/io/openliberty/sample/system`
+`guide-getting-started/start/src/main/java/io/openliberty/sample/system`
 
 Create SystemReadinessCheck class
 
