@@ -110,8 +110,9 @@ When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to 
 [INFO] [AUDIT] CWWKF0008I: Feature update completed in 0.285 seconds.
 [INFO] [AUDIT] CWWKT0016I: Web application available (default_host): http://foo:9080/
 ````
-Try to access the /health endpoint again by visiting:
-`curl http://localhost:9080/health` URL. 
+Try to access the /health endpoint again by visiting the health URL:
+
+`curl http://localhost:9080/health`
 
 You see the following JSON output:
 ````
@@ -151,7 +152,6 @@ Open SystemReadinessCheck.java
 `guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemReadinessCheck.java`
 
 Insert code into SystemReadinessCheck class:
-
 
 ````
 package io.openliberty.sample.system;
@@ -246,7 +246,9 @@ The following messages display in your first shell session:
 [INFO] [AUDIT] CWWKZ0003I: The application io.openliberty.guides.getting-started updated in xx.xx seconds.
 ````
 
-Access the /health endpoint again by `curl http://localhost:9080/health` URL. This time you see the overall status of your server as well as the aggregated data of the liveness and readiness checks for the system microservice: 
+Access the /health endpoint again by entering the `health` endpoint URL. This time you see the overall status of your server as well as the aggregated data of the liveness and readiness checks for the system microservice: 
+
+`curl http://localhost:9080/health`
 
 ````
 {
@@ -270,16 +272,20 @@ Access the /health endpoint again by `curl http://localhost:9080/health` URL. Th
    "status":"UP"
 }
 ````
-You can also access the `/health/ready` endpoint by visiting the `curl http://localhost:9080/health/ready` URL to view the data from the readiness health check. 
+You can also access the `/health/ready` endpoint by visiting the `ready` endpoint to view the data from the readiness health check. 
 
-Similarily, access the /health/live endpoint by visiting or running
-`curl http://localhost:9080/health/live` URL to view the data from the liveness health check.
+`curl http://localhost:9080/health/ready` 
+
+Similarily, access the /health/live endpoint by visiting or running the Liveness health check URLto view the data:
+
+`curl http://localhost:9080/health/live` 
 
 ## Checking the Open Liberty server logs
 
 Go back to the second shell session
 
 While the server is running in the foreground, it displays various console messages in the shell. These messages are also logged to:
+
 `target/liberty/wlp/usr/servers/defaultServer/logs/console.log` file. 
 
 You can find the complete server logs in the 
@@ -342,6 +348,9 @@ To containerize the application, you need a `Dockerfile`. This file contains a c
 Run the `mvn package` command from the `start` directory so that the .war file resides in the target directory.
 
 `mvn package`
+
+Build the docker image:
+
 `docker build -t openliberty-getting-started:1.0-SNAPSHOT .`
 
 The Docker `openliberty-getting-started:1.0-SNAPSHOT` image is also built from the Dockerfile. To verify that the image is built, run the docker images command to list all local Docker images:
@@ -355,11 +364,9 @@ REPOSITORY                     TAG             IMAGE ID        CREATED         S
 openliberty-getting-started    1.0-SNAPSHOT    85085141269b    21 hours ago    487MB
 ````
 
-
 Next, run the image as a container:
 
 `docker run -d --name gettingstarted-app -p 9080:9080 openliberty-getting-started:1.0-SNAPSHOT`
-
 
 There is a bit going on here, so let’s break down the command:
 
@@ -396,14 +403,11 @@ To remove the image, run the following command:
 
 `docker rmi openliberty-getting-started:1.0-SNAPSHOT`
 
-
 ## Running the application from a minimal runnable JAR
 
 So far, Open Liberty has been running out of the `target/liberty/wlp` directory, which effectively contains an Open Liberty server installation and the deployed application. The final product of the Maven build is a server package for use in a continuous integration pipeline and, ultimately, a production deployment.
 
-
 Open Liberty supports a number of different server packages. The sample application currently generates a usr package that contains the servers and application to be extracted onto an Open Liberty installation.
-
 
 The type of server package is configured with `<packaging.type/>` in the `pom.xml`.
 
@@ -411,19 +415,21 @@ Instead of creating a server package, you can generate a runnable JAR file that 
 
 `mvn liberty:package -Dinclude=runnable`
 
-
 To run the JAR, first stop the server if it’s running. Then, navigate to the `target` directory and run the `java -jar` command:
 
 `cd target`
+
+Package guide-getting-started into a Java Archive:
 
 `java -jar guide-getting-started.jar`
 
 When the server starts:
 
-`curl http://localhost:9080/system/properties` URL to access your application that is now running out of the minimal runnable JAR.
+Access your application that is now running out of the minimal runnable JAR.
+
+`curl http://localhost:9080/system/properties` 
 
 At this point, you can stop the server by pressing `CTRL+C` in the shell session that the server runs in.
-
 
 ## Well done
 
