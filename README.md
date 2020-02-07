@@ -100,20 +100,19 @@ Open and browse the `server.xml` file in the Development Environment at:
 
 Add the mpHealth feature tag between the `<feature manager>` tags:
 
-`<feature>mpHealth-2.2</feature>`
+`<feature>mpHealth-2.1</feature>`
 
 Save the file `CMD + s` or `CTRL + s` on the server.xml, the OL terminal will update with the new changes.
 
 When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to the application. You can see the server being updated in the server log that’s displayed in your first shell session:
 
 ````
-
 [INFO] [AUDIT] CWWKG0016I: Starting server configuration update.
 [INFO] [AUDIT] CWWKT0017I: Web application removed (default_host): http://foo:9080/
 [INFO] [AUDIT] CWWKZ0009I: The application io.openliberty.guides.getting-started has stopped successfully.
 [INFO] [AUDIT] CWWKG0017I: The server configuration was successfully updated in 0.284 seconds.
 [INFO] [AUDIT] CWWKT0016I: Web application available (default_host): http://foo:9080/health/
-[INFO] [AUDIT] CWWKF0012I: The server installed the following features: [mpHealth-1.0].
+[INFO] [AUDIT] CWWKF0012I: The server installed the following features: [mpHealth-2.0].
 [INFO] [AUDIT] CWWKF0008I: Feature update completed in 0.285 seconds.
 [INFO] [AUDIT] CWWKT0016I: Web application available (default_host): http://foo:9080/
 ````
@@ -199,7 +198,7 @@ The `SystemReadinessCheck` class verifies that the `system` microservice is not 
 
 Go to the directory that the `SystemReadinessCheck.java` will be saved
 
-Ensure you save the java file (cmd + s)
+Ensure you save the java file `CMD + s`
 
 ### Create the SystemLivenessCheck class.
 
@@ -309,7 +308,9 @@ Add the logging feature into the `server.xml`
 <logging traceSpecification="com.ibm.ws.microprofile.health.*=all" />
 ```
 
-The `component` element is a Java package or class, and the `level` element is one of the following logging levels: `off`, `fatal`, `severe`, `warning`, `audit`, `info`, `config`, `detail`, `fine`, `finer`, `finest`, `all`.
+The `component` element is a Java package or class, and the `level` element is one of the following logging levels: 
+
+`off`, `fatal`, `severe`, `warning`, `audit`, `info`, `config`, `detail`, `fine`, `finer`, `finest`, `all`.
 
 Once enabled the `server.xml` should look like this:
 
@@ -422,11 +423,11 @@ Instead of creating a server package, you can generate a runnable JAR file that 
 
 `mvn liberty:package -Dinclude=runnable`
 
-To run the JAR, first stop the server if it’s running. Then, navigate to the `target` directory and run the `java -jar` command:
+To run the JAR, first stop the server if it’s running. Then, navigate to the `target` directory:
 
 `cd target`
 
-Package guide-getting-started into a Java Archive:
+And run the `java -jar` command:
 
 `java -jar guide-getting-started.jar`
 
