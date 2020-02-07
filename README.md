@@ -66,7 +66,7 @@ Some of the `properties` from the ouput include:
     ...
 }
 ````
-Simply press `CTRL+C` in the shell session where you ran the server to stop the server. 
+Simply press `CTRL + C` in the shell session where you ran the server to stop the server. 
 
 ## Updating the server configuration without restarting the server
 
@@ -78,7 +78,7 @@ The Open Liberty server automatically reloads the configuration without restarti
 
 Navigate back to the terminal window where you started the Open Liberty Server and stop it.
 
-`ctrl + c`
+`CTRL + C`
 
 To start the server in dev mode run:
 
@@ -102,7 +102,7 @@ Add the mpHealth feature tag between the `<feature manager>` tags:
 
 `<feature>mpHealth-2.2</feature>`
 
-Save the file `cmd + s` or `ctrl + s` on the server.xml, the OL terminal will update with the new changes.
+Save the file `CMD + s` or `CTRL + s` on the server.xml, the OL terminal will update with the new changes.
 
 When enabled, the `mpHealth` feature automatically adds a `/health` endpoint to the application. You can see the server being updated in the server log that’s displayed in your first shell session:
 
@@ -122,12 +122,12 @@ Try to access the /health endpoint again by visiting the health URL:
 `curl http://localhost:9080/health`
 
 You see the following JSON output:
+
 ````
 {
     "checks":[],
     "outcome":"UP"
 }
-
 ````
 You now have a means of verifying if your server is up and running.
 
