@@ -1,4 +1,4 @@
-## Building and running the application
+## Packaging and Deploying applications
 
 ### What you will learn
 
