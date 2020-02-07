@@ -52,6 +52,13 @@ Open up a new terminal window by pressing the split window icon in the top right
 To access the `system` microservice, access the service endpoint to cause some application measurements to be recorded:
 
 `curl http://localhost:9080/system/properties`
+
+The output follows:
+
+````
+{"awt.toolkit":"sun.awt.X11.XToolkit","file.encoding.pkg":"sun.io","java.specification.version":"11","jdk.extensions.version":"11.0.6.1","sun.jnu.encoding":"ANSI_X3.4-1968"
+````
+Some of the `properties` from the ouput include:
 ````
 {
     "os.name":"Linux"
@@ -93,7 +100,7 @@ Open and browse the `server.xml` file in the Development Environment at:
 
 Add the mpHealth feature tag between the `<feature manager>` tags:
 
-`<feature>mpHealth-2.0</feature>`
+`<feature>mpHealth-2.2</feature>`
 
 Save the file `cmd + s` or `ctrl + s` on the server.xml, the OL terminal will update with the new changes.
 
