@@ -1,8 +1,8 @@
-## Packaging and Deploying applications
+## Get started developing Java microservices with Open Liberty
 
 ### What you will learn
 
-You will learn how to run and update a simple REST microservice on an Open Liberty server. You will use Maven throughout the guide to build and deploy the microservice as well as to interact with the running server instance.
+Learn how to build, deploy and update microservices easily with Open Liberty, an open lightweight cloud-native Java server runtime, using Maven and Docker.
 
 Open Liberty is an application server designed for the cloud. It’s small, lightweight, and designed with modern cloud-native application development in mind. It supports the full MicroProfile and Java EE APIs and is composable, meaning that you can use only the features that you need, keeping the server lightweight, which is great for microservices. It also deploys to every major cloud platform, including Docker, Kubernetes, and Cloud Foundry.
 
@@ -15,13 +15,13 @@ Finally, you will package the application along with the server configuration in
 
 Ensure you are running the Quick Lab in Google Chrome for the full experience.
 
-Check you are in the `home/project` folder:
-
-`pwd`
-
 If a terminal window does not open navigate:
 
 `Terminal -> New Terminal`
+
+Check you are in the `home/project` folder:
+
+`pwd`
 
 Clone the Project you are going to be working in:
 
@@ -74,7 +74,7 @@ The Open Liberty Maven plug-in includes a dev goal that listens for any changes 
 
 The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
 
-#### Start Open Liberty Server in dev mode
+## Start Open Liberty Server in dev mode
 
 Navigate back to the terminal window where you started the Open Liberty Server and stop it.
 
@@ -96,7 +96,7 @@ Open up the `server.xml` file and add the MicroProfile Health feature to the ser
  
 Open and browse the `server.xml` file in the Development Environment at:
 
-`guide-getting-started/start/src/main/liberty/config/server.xml`
+`[File -> Open] guide-getting-started/start/src/main/liberty/config/server.xml`
 
 Add the mpHealth feature tag between the `<feature manager>` tags:
 
@@ -147,7 +147,7 @@ MicroProfile Health offers health checks for both readiness and liveness. A read
 
 Head to the directory where the SystemReadinessCheck class will be created
 
-`guide-getting-started/start/src/main/java/io/openliberty/sample/system`
+`cd guide-getting-started/start/src/main/java/io/openliberty/sample/system`
 
 Create SystemReadinessCheck class
 
@@ -155,11 +155,11 @@ Create SystemReadinessCheck class
 
 Open SystemReadinessCheck.java
 
-`guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemReadinessCheck.java`
+`[File -> Open] guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemReadinessCheck.java`
 
 Insert code into SystemReadinessCheck class:
 
-````
+```
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -192,7 +192,7 @@ public class SystemReadinessCheck implements HealthCheck {
     }
 
 }
-````
+```
 
 The `SystemReadinessCheck` class verifies that the `system` microservice is not in maintenance by checking a config property.
 
@@ -208,7 +208,11 @@ Create a new file called `SystemLivenessCheck.java`
 
 Open `SystemLivenessCheck.java` and  insert the following code: 
 
-````
+If you are out of the file directory from the `SystemReadinessCheck` open the `SystemLivenessCheck.java` via:
+
+`[File -> Open] guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemLivenessCheck.java`
+
+```
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -238,7 +242,7 @@ public class SystemLivenessCheck implements HealthCheck {
     }
 
 }
-````
+```
 
 The `SystemLivenessCheck` class reports a status of DOWN if the microservice uses over 90% of the maximum amount of memory.
 
