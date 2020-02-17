@@ -13,6 +13,12 @@ Finally, you will package the application along with the server configuration in
 
 ## Building and running the application
 
+The fastest way to work through this guide is to clone the Git repository and use the projects that are provided inside:
+
+`git clone https://github.com/openliberty/guide-getting-started.git`
+
+`cd guide-getting-started`
+
 Ensure you are running the Quick Lab in Google Chrome for the full experience.
 
 If a terminal window does not open navigate:
