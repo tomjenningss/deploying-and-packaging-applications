@@ -27,8 +27,6 @@ The fastest way to work through this guide is to clone the Git repository and us
 
 `git clone https://github.com/openliberty/guide-getting-started.git`
 
-`cd guide-getting-started`
-
 Navigate to the start directory where your pom.xml file is located. Your pom.xml file is configured to include the liberty-maven-plugin, which allows you to install applications into Open Liberty as well as manage the server instances.
 
 `cd guide-getting-started/start`
