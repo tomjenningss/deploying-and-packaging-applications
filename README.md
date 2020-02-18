@@ -61,13 +61,15 @@ The output follows:
 {"awt.toolkit":"sun.awt.X11.XToolkit","file.encoding.pkg":"sun.io","java.specification.version":"11","jdk.extensions.version":"11.0.6.1","sun.jnu.encoding":"ANSI_X3.4-1968"
 ````
 Some of the `properties` from the ouput include:
-````
+
+```JSON
 {
     "os.name":"Linux"
     java.version":"11.0.6",
     ...
 }
-````
+```
+
 Simply press `CTRL + C` in the shell session where you ran the server to stop the server. 
 
 ## Updating the server configuration without restarting the server
@@ -124,12 +126,12 @@ Try to access the /health endpoint again by visiting the health URL:
 
 You see the following JSON output:
 
-````
+```JSON
 {
     "checks":[],
     "outcome":"UP"
 }
-````
+```
 You now have a means of verifying if your server is up and running.
 
 ## Updating the source code without restarting the server
@@ -151,15 +153,15 @@ Head to the directory where the SystemReadinessCheck class will be created
 
 `cd guide-getting-started/start/src/main/java/io/openliberty/sample/system`
 
-Create SystemReadinessCheck class
+Create the `SystemReadinessCheck` class:
 
 `touch SystemReadinessCheck.java`
 
-Open SystemReadinessCheck.java
+Open the `SystemReadinessCheck.java`:
 
 `[File -> Open] guide-getting-started/start/src/main/java/io/openliberty/sample/system/SystemReadinessCheck.java`
 
-Insert code into SystemReadinessCheck class:
+Insert this code into the `SystemReadinessCheck` class:
 
 ```
 package io.openliberty.sample.system;
