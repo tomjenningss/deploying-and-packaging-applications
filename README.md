@@ -138,7 +138,7 @@ The JAX-RS application that contains your **system** microservice is configured 
 
 Navigate to the **pom.xml** file under start directory
 
-The loose application support is enabled with the `<looseApplication/>` element in the `liberty-maven-plugin` plug-in.
+The loose application support is enabled with the <looseApplication/> element in the **liberty-maven-plugin** plug-in.
 
 Try updating the source code while the server is running. At the moment, the `/health` endpoint reports whether or not the server is running, but the endpoint doesn’t provide any details on the microservices that are running inside of the server.
 
